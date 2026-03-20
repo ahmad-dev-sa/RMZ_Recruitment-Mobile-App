@@ -1,0 +1,107 @@
+{
+  "app_name": "RMZ Recruitment",
+  "welcome": "Welcome",
+  "login": "Login",
+  "register": "Register",
+  "continue": "Continue",
+  "skip": "Skip",
+  "splash": {
+    "slogan": "Home Cleaning ... And More"
+  },
+  "onboarding": {
+    "page1": {
+      "title": "Integrated Recruitment Services",
+      "description": "We provide you with the best carefully trained domestic workers to meet all your home needs with professionalism and a comprehensive guarantee."
+    },
+    "page2": {
+      "title": "Choose the Right Package",
+      "description": "We offer flexible and diverse packages that suit your budget, whether you are looking for an hourly service or a monthly and yearly contract."
+    },
+    "page3": {
+      "title": "Your Peace of Mind Matters",
+      "description": "All procedures are done electronically and with ease. Start now and discover a recruitment experience free of complexity."
+    }
+  },
+  "errors": {
+    "unknown": "An unknown error occurred",
+    "network": "Network connection error"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "subtitle": "Welcome back!",
+      "description": "Log in to access all your services and track your activity.",
+      "id_number": "Identity Number",
+      "password": "Password",
+      "forgot_password": "Forgot Password?",
+      "submit": "Login",
+      "dont_have_account": "Don't have an account?",
+      "register_here": "Please register here"
+    },
+    "register": {
+      "title": "Register",
+      "subtitle": "We are glad you joined us. Please continue by logging in or creating a new account.",
+      "id_number": "Identity Number",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "phone_number": "Phone Number",
+      "email": "Email Address",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "agree_to": "I agree to ",
+      "terms": "Terms & Conditions",
+      "view": "View ",
+      "privacy_policy": "Privacy Policy",
+      "submit": "Register",
+      "already_have_account": "Already have an account?",
+      "login_here": "Login"
+    },
+    "forgot_password": {
+      "title": "Forgot Password?",
+      "id_number": "Identity Number",
+      "description": "A new temporary password will be sent to your registered mobile number",
+      "submit": "Send",
+      "success_title": "Temporary password sent successfully",
+      "success_message": "A temporary password has been sent via text message to your registered mobile number.",
+      "close": "Close"
+    }
+  },
+  "documents": {
+    "terms_and_conditions": {
+      "title": "Terms & Conditions",
+      "content": "Lorem ipsum dolor sit amet consectetur adipiscing elit posuere, lacus sociis libero quam tempor dignissim tincidunt dis, nascetur erat bibendum scelerisque nibh vehicula semper.\nOrci viverra posuere porttitor at magnis dignissim malesuada luctus porta, suspendisse ultricies lacinia pellentesque sed facilisi arcu massa tempus diam, augue potenti netus vel vivamus enim id nostra. Pulvinar fringilla accumsan velit hac fermentum dictum mattis etiam viverra suscipit aptent orci dui, purus eleifend aliquet at pharetra ut tristique natoque erat gravida ullamcorper."
+    },
+    "privacy_policy": {
+      "title": "Privacy Policy",
+      "content": "Lorem ipsum dolor sit amet consectetur adipiscing elit posuere, lacus sociis libero quam tempor dignissim tincidunt dis, nascetur erat bibendum scelerisque nibh vehicula semper.\nOrci viverra posuere porttitor at magnis dignissim malesuada luctus porta, suspendisse ultricies lacinia pellentesque sed facilisi arcu massa tempus diam, augue potenti netus vel vivamus enim id nostra. Pulvinar fringilla accumsan velit hac fermentum dictum mattis etiam viverra suscipit aptent orci dui, purus eleifend aliquet at pharetra ut tristique natoque erat gravida ullamcorper."
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "orders": "Orders",
+    "offers": "Offers",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "home": {
+    "welcome": "Welcome, {name}",
+    "notification_tooltip": "Notifications",
+    "categories": {
+      "recruitment": "Recruitment",
+      "resident": "Resident",
+      "hourly": "Hourly"
+    },
+    "latest_packages": "Latest Packages",
+    "view_more": "View More",
+    "workers_by_details": "Workers by Details",
+    "workers_by_details_desc": "Recruit workers according to your requested specifications",
+    "services": {
+      "housekeeper": "Housekeeper",
+      "babysitter": "Babysitter",
+      "home_cook": "Home Cook",
+      "private_driver": "Private Driver",
+      "nurse": "Nurse",
+      "personal_care": "Personal Care"
+    }
+  }
+}
