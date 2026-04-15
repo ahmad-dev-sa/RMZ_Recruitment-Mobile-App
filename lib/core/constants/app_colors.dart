@@ -9,7 +9,7 @@ class AppColors {
 
   // Background Colors
   static const Color backgroundLight = Color(0xFFF9F9FA); // Very light grey/blue for the main app background
-  static const Color backgroundDark = Color(0xFF121212);
+  static const Color backgroundDark = Color(0x0B1F33);
   static const Color headerDarkBlue = Color(0xFF1A2B3C); // The dark blue header in Dashboard
 
   

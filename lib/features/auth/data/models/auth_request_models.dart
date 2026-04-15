@@ -39,8 +39,7 @@ class RegisterRequest {
   Map<String, dynamic> toJson() {
     return {
       'id_number': idNumber,
-      'first_name': firstName,
-      'last_name': lastName,
+      'full_name': '$firstName $lastName'.trim(),
       'phone_number': phoneNumber,
       'email': email,
       'password': password,

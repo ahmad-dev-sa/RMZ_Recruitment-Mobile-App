@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/constants/app_colors.dart';
 
+import 'package:flutter_html/flutter_html.dart';
+
 class DocumentBottomSheet extends StatelessWidget {
   final String title;
   final String content;
@@ -19,29 +21,27 @@ class DocumentBottomSheet extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      height: MediaQuery.of(context).size.height * 0.7, // Occupy roughly 70% of screen height
+      height: MediaQuery.of(context).size.height * 0.7, 
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.primary, // Cyan background matching the design
+        color: AppColors.primary, 
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
       ),
       child: Stack(
         children: [
-          // Content Area
           Positioned.fill(
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsets.only(
                   left: 24.w,
                   right: 24.w,
-                  top: 60.h, // Space for the close button and title
+                  top: 60.h, 
                   bottom: 24.h,
                 ),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Title
                       Text(
                         title,
                         style: theme.textTheme.headlineLarge?.copyWith(
@@ -51,18 +51,22 @@ class DocumentBottomSheet extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      
                       SizedBox(height: 32.h),
-                      
-                      // Content text
-                      Text(
-                        content,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: isDark ? AppColors.textPrimaryDark : AppColors.secondary,
-                          height: 1.8,
-                          fontSize: 15.sp,
-                        ),
-                        textAlign: TextAlign.justify, // Added justify for structured reading
+                      Html(
+                        data: content,
+                        style: {
+                          "body": Style(
+                            color: isDark ? AppColors.textPrimaryDark : AppColors.secondary,
+                            fontSize: FontSize(15.sp),
+                            lineHeight: LineHeight(1.8),
+                            textAlign: TextAlign.justify,
+                            padding: HtmlPaddings.zero,
+                            margin: Margins.zero,
+                          ),
+                          "p": Style(
+                            margin: Margins.only(bottom: 8.h),
+                          ),
+                        },
                       ),
                     ],
                   ),

@@ -8,6 +8,9 @@ abstract class AuthRemoteDataSource {
   Future<Map<String, dynamic>> login(LoginRequest request);
   Future<Map<String, dynamic>> register(RegisterRequest request);
   Future<UserModel> getUserProfile();
+  Future<UserModel> updateProfile(Map<String, dynamic> data);
+  Future<void> changePassword(String newPassword, String confirmPassword);
+  Future<void> deactivateAccount();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -45,7 +48,55 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> getUserProfile() async {
     try {
       final response = await _dioClient.dio.get(ApiConstants.me);
-      return UserModel.fromJson(response.data);
+      
+      final resData = response.data;
+      if (resData is Map<String, dynamic> && resData.containsKey('data') && resData['success'] == true) {
+        return UserModel.fromJson(resData['data']);
+      }
+      
+      return UserModel.fromJson(resData);
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<UserModel> updateProfile(Map<String, dynamic> data) async {
+    try {
+      // Using PATCH because the backend GenericViewSet maps @me.mapping.patch
+      final response = await _dioClient.dio.patch(ApiConstants.updateProfile, data: data);
+      
+      final resData = response.data;
+      if (resData is Map<String, dynamic> && resData.containsKey('data') && resData['success'] == true) {
+        return UserModel.fromJson(resData['data']);
+      }
+      
+      return UserModel.fromJson(resData);
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<void> changePassword(String newPassword, String confirmPassword) async {
+    try {
+      await _dioClient.dio.post(
+        ApiConstants.changePassword,
+        data: {
+          'new_password': newPassword,
+        },
+      );
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    }
+  }
+
+  @override
+  Future<void> deactivateAccount() async {
+    try {
+      await _dioClient.dio.post(
+        'profile/deactivate/', // Endpoint URL
+      );
     } on DioException catch (e) {
       throw _handleDioError(e);
     }
@@ -55,6 +106,32 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     if (error.response != null) {
       final data = error.response?.data;
       if (data != null && data is Map<String, dynamic>) {
+        
+        // Handle new standardized ApiResponse format
+        if (data.containsKey('error') && data['error'] is Map<String, dynamic>) {
+          final errorObj = data['error'];
+          
+          if (errorObj.containsKey('fields') && errorObj['fields'] is Map<String, dynamic>) {
+            final fields = errorObj['fields'] as Map<String, dynamic>;
+            final List<String> errorMessages = [];
+            
+            for (var fieldErrors in fields.values) {
+              if (fieldErrors is List) {
+                // Add all field errors
+                errorMessages.addAll(fieldErrors.map((e) => e.toString()));
+              }
+            }
+            
+            if (errorMessages.isNotEmpty) {
+              return Exception(errorMessages.join('\n'));
+            }
+          }
+          
+          if (errorObj.containsKey('message')) {
+            return Exception(errorObj['message'].toString());
+          }
+        }
+
         // Checking for common registration unique constraint violations
         if (data.containsKey('email') || data.containsKey('phone_number') || data.containsKey('id_number') || data.containsKey('first_name')) {
            return Exception('هذا البريد الإلكتروني أو رقم الجوال أو رقم الهوية مستخدم بالفعل، الرجاء اختيار بيانات أخرى.');

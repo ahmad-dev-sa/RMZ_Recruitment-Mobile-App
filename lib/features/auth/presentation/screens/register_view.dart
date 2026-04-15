@@ -12,6 +12,53 @@ import '../widgets/document_bottom_sheet.dart';
 import '../widgets/document_bottom_sheet.dart';
 import '../providers/auth_provider.dart';
 import '../providers/auth_state.dart';
+import '../../../../features/settings/presentation/providers/site_settings_provider.dart';
+
+class SiteSettingsDocumentBottomSheet extends ConsumerWidget {
+  final bool isTerms;
+  const SiteSettingsDocumentBottomSheet({super.key, required this.isTerms});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settingsAsync = ref.watch(siteSettingsProvider);
+    final lang = context.locale.languageCode;
+
+    return settingsAsync.when(
+      data: (settings) {
+        final title = isTerms ? 'documents.terms_and_conditions.title'.tr() : 'documents.privacy_policy.title'.tr();
+        final key = isTerms ? 'terms_$lang' : 'privacy_$lang';
+        final content = settings[key] ?? 'لا يوجد محتوى';
+
+        return DocumentBottomSheet(
+          title: title,
+          content: content,
+        );
+      },
+      loading: () => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+        ),
+        child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+      ),
+      error: (e, s) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+        ),
+        child: Center(
+          child: Text(
+            'حدث خطأ أثناء تحميل البيانات',
+            style: TextStyle(color: Colors.white, fontSize: 16.sp),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 
 class RegisterView extends ConsumerStatefulWidget {
   const RegisterView({super.key});
@@ -243,10 +290,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                               context: context,
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
-                              builder: (context) => DocumentBottomSheet(
-                                title: 'documents.terms_and_conditions.title'.tr(),
-                                content: 'documents.terms_and_conditions.content'.tr(),
-                              ),
+                              builder: (context) => const SiteSettingsDocumentBottomSheet(isTerms: true),
                             );
                           },
                           child: Text(
@@ -299,10 +343,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                               context: context,
                               isScrollControlled: true,
                               backgroundColor: Colors.transparent,
-                              builder: (context) => DocumentBottomSheet(
-                                title: 'documents.privacy_policy.title'.tr(),
-                                content: 'documents.privacy_policy.content'.tr(),
-                              ),
+                              builder: (context) => const SiteSettingsDocumentBottomSheet(isTerms: false),
                             );
                           },
                           child: Text(

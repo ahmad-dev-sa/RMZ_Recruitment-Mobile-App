@@ -1,6 +1,7 @@
 import '../../domain/entities/notification_entity.dart';
 import '../../domain/repositories/notification_repository.dart';
 import '../datasources/notification_remote_data_source.dart';
+import '../models/notifications_response_model.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {
   final NotificationRemoteDataSource remoteDataSource;
@@ -8,8 +9,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
   NotificationRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<NotificationEntity>> getNotifications({bool? isRead}) async {
-    return await remoteDataSource.getNotifications(isRead: isRead);
+  Future<NotificationsResponseModel> getNotifications() async {
+    return await remoteDataSource.getNotifications();
   }
 
   @override
@@ -20,5 +21,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
   @override
   Future<bool> markAllAsRead() async {
     return await remoteDataSource.markAllAsRead();
+  }
+
+  @override
+  Future<bool> deleteNotification(String id) async {
+    return await remoteDataSource.deleteNotification(id);
   }
 }

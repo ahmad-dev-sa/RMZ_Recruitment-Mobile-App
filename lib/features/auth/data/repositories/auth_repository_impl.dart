@@ -51,6 +51,22 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<UserEntity> updateProfile(Map<String, dynamic> data) async {
+    return await _remoteDataSource.updateProfile(data);
+  }
+
+  @override
+  Future<void> changePassword(String newPassword, String confirmPassword) async {
+    return await _remoteDataSource.changePassword(newPassword, confirmPassword);
+  }
+
+  @override
+  Future<void> deactivateAccount() async {
+    await _remoteDataSource.deactivateAccount();
+    await logout();
+  }
+
+  @override
   Future<void> logout() async {
     await _storageHelper.clearAuthData();
   }

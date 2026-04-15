@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
@@ -71,7 +72,13 @@ class _SplashViewState extends ConsumerState<SplashView>
       if (currentAuthState is AuthAuthenticated) {
         context.goNamed('home');
       } else {
-        context.goNamed('onboarding');
+        final prefs = await SharedPreferences.getInstance();
+        final hasSeenOnboarding = prefs.getBool('has_seen_onboarding') ?? false;
+        if (hasSeenOnboarding) {
+          context.goNamed('login');
+        } else {
+          context.goNamed('onboarding');
+        }
       }
     }
   }

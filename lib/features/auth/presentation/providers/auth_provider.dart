@@ -96,6 +96,52 @@ class AuthNotifier extends StateNotifier<AuthState> {
     await _repository.logout();
     state = const AuthUnauthenticated();
   }
+
+  Future<void> updateProfile({
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    String? email,
+  }) async {
+    final currentState = state;
+    if (currentState is! AuthAuthenticated) return;
+
+    state = const AuthLoading();
+    try {
+      final data = <String, dynamic>{};
+      if (firstName != null) data['first_name'] = firstName;
+      if (lastName != null) data['last_name'] = lastName;
+      if (phoneNumber != null) data['phone_number'] = phoneNumber;
+      if (email != null) data['email'] = email;
+
+      final updatedUser = await _repository.updateProfile(data);
+      state = AuthAuthenticated(updatedUser);
+    } catch (e) {
+      // Revert back on error
+      state = currentState;
+      throw e;
+    }
+  }
+
+  Future<void> changePassword(String newPassword, String confirmPassword) async {
+    try {
+      await _repository.changePassword(newPassword, confirmPassword);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> deactivateAccount() async {
+    state = const AuthLoading();
+    try {
+      await _repository.deactivateAccount();
+      state = const AuthUnauthenticated();
+    } catch (e) {
+      // Revert back or throw
+      state = const AuthUnauthenticated(); // or leave it unauthenticated anyway since it failed, but probably best to fetch profile again or just throw
+      throw e;
+    }
+  }
 }
 
 // 3. Main Auth Provider for the UI

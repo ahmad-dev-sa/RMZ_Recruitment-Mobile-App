@@ -1,3 +1,5 @@
+import '../../../../core/enums/workflow_type.dart';
+
 class CategoryEntity {
   final int id;
   final String nameAr;
@@ -5,7 +7,7 @@ class CategoryEntity {
   final String descriptionAr;
   final String descriptionEn;
   final String? iconUrl;
-  final String workflowType;
+  final WorkflowType workflowType;
   final bool isNew;
   final String textIsNewAr;
   final String textIsNewEn;
