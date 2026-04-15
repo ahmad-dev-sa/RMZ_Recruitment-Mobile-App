@@ -9,13 +9,13 @@ class AppColors {
 
   // Background Colors
   static const Color backgroundLight = Color(0xFFF9F9FA); // Very light grey/blue for the main app background
-  static const Color backgroundDark = Color(0x0B1F33);
+  static const Color backgroundDark = Color(0xFF02021A);
   static const Color headerDarkBlue = Color(0xFF1A2B3C); // The dark blue header in Dashboard
 
   
   // Surface Colors
   static const Color surfaceLight = Colors.white;
-  static const Color surfaceDark = Color(0xFF1E1E1E);
+  static const Color surfaceDark = Color(0xFF02021A);
 
   // Text Colors
   static const Color textPrimaryLight = Color(0xFF0F2035); // Dark blue for headings
