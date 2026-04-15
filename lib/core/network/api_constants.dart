@@ -9,7 +9,11 @@ class ApiConstants {
   static const String register = 'auth/register/';
   static const String login = 'auth/login/';
   static const String refresh = 'auth/refresh/';
-  static const String me = 'auth/me/';
+  static const String me = 'profile/me/';
+  
+  // Profile Endpoints
+  static const String updateProfile = 'profile/me/';
+  static const String changePassword = 'profile/change-password/';
 
   // Marketing Endpoints
   static const String banners = 'marketing/banners/';

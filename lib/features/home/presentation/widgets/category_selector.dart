@@ -27,7 +27,7 @@ class CategorySelector extends ConsumerWidget {
         });
 
         return SizedBox(
-          height: 70.h,
+          height: 85.h,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: categories.length,
@@ -40,6 +40,7 @@ class CategorySelector extends ConsumerWidget {
               final name = locale == 'ar' ? category.nameAr : category.nameEn;
 
               final newText = locale == 'ar' ? category.textIsNewAr : category.textIsNewEn;
+              final isDark = Theme.of(context).brightness == Brightness.dark;
 
               return GestureDetector(
                 onTap: () {
@@ -49,53 +50,55 @@ class CategorySelector extends ConsumerWidget {
                   clipBehavior: Clip.none,
                   children: [
                     Container(
-                      margin: EdgeInsets.only(left: 12.w, top: 8.h, bottom: 8.h),
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      margin: EdgeInsets.only(left: 12.w, top: 10.h, bottom: 10.h),
+                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primary : Colors.white,
-                        borderRadius: BorderRadius.circular(30), // Pill shape
+                        color: isSelected ? AppColors.primary : (isDark ? const Color(0xFF1E293B) : Colors.white),
+                        borderRadius: BorderRadius.circular(40), // Pill shape
+                        border: isSelected ? null : Border.all(color: isDark ? Colors.transparent : Colors.grey.shade200, width: 1.5),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
+                            color: isSelected ? AppColors.primary.withOpacity(0.3) : Colors.black.withOpacity(0.04),
+                            blurRadius: isSelected ? 8 : 4,
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           // Image Icon
                           Container(
-                            width: 32.w,
-                            height: 32.w,
+                            width: 44.w,
+                            height: 44.w,
                             decoration: BoxDecoration(
-                              color: isSelected ? Colors.white.withOpacity(0.2) : Colors.grey.shade100,
+                              color: isSelected ? Colors.white.withAlpha(50) : (isDark ? Colors.white.withAlpha(20) : Colors.grey.shade100),
                               shape: BoxShape.circle,
                             ),
                             child: Center(
                               child: category.iconUrl != null && category.iconUrl!.isNotEmpty
                                   ? Image.network(
                                       category.iconUrl!,
-                                      width: 20.w,
-                                      height: 20.h,
+                                      width: 24.w,
+                                      height: 24.h,
                                       fit: BoxFit.contain,
                                       errorBuilder: (context, error, stackTrace) =>
-                                          Icon(Icons.category_outlined, size: 18.sp, color: isSelected ? Colors.white : AppColors.primary),
+                                          Icon(Icons.category_outlined, size: 22.sp, color: isSelected ? Colors.white : AppColors.primary),
                                     )
-                                  : Icon(Icons.category_outlined, size: 18.sp, color: isSelected ? Colors.white : AppColors.primary),
+                                  : Icon(Icons.category_outlined, size: 22.sp, color: isSelected ? Colors.white : AppColors.primary),
                             ),
                           ),
                           
-                          SizedBox(width: 8.w),
+                          SizedBox(width: 12.w),
                           
                           // Title Text
                           Text(
                             name,
                             style: TextStyle(
-                              color: isSelected ? Colors.white : AppColors.textPrimaryLight,
+                              color: isSelected ? Colors.white : (isDark ? Colors.white : AppColors.textPrimaryLight),
                               fontWeight: FontWeight.bold,
-                              fontSize: 14.sp,
+                              fontSize: 15.sp,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -110,10 +113,11 @@ class CategorySelector extends ConsumerWidget {
                         top: 2.h,
                         right: 8.w,
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                           decoration: BoxDecoration(
                             color: AppColors.error, // Red warning color
                             borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.white, width: 1.5),
                           ),
                           child: Text(
                             newText,
@@ -133,12 +137,12 @@ class CategorySelector extends ConsumerWidget {
         );
       },
       loading: () => SizedBox(
-        height: 70.h,
+        height: 85.h,
         child: const Center(child: CircularProgressIndicator()),
       ),
       error: (e, st) => SizedBox(
-        height: 70.h,
-        child: const Center(child: Text("خطأ في جلب الأقسام")),
+        height: 85.h,
+        child: Center(child: Text('home.error_fetching_categories'.tr())),
       ),
     );
   }

@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import '../storage/secure_storage_helper.dart';
+import 'auth_interceptor.dart';
 
 class ApiClient {
   static const String baseUrl = 'https://rmz-test.anafannan.cloud/api/v1/'; // TODO: Replace with actual Django API URL
@@ -9,8 +11,8 @@ class ApiClient {
   ApiClient() : _dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
@@ -21,14 +23,13 @@ class ApiClient {
   }
 
   void _initializeInterceptors() {
+    final secureStorage = SecureStorageHelper();
+    _dio.interceptors.add(AuthInterceptor(_dio, secureStorage));
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // TODO: Fetch token from flutter_secure_storage and attach here
-          // final token = await secureStorage.read(key: 'token');
-          // if (token != null) {
-          //   options.headers['Authorization'] = 'Bearer $token';
-          // }
+          // Auth interceptor handles tokens now
 
           // Add Language Header for Django i18n
           // options.headers['Accept-Language'] = 'ar'; // Dynamic based on context
@@ -47,9 +48,12 @@ class ApiClient {
         onError: (DioException e, handler) async {
           if (kDebugMode) {
              print('<-- Error ${e.message}');
+             if (e.response != null) {
+               print('<-- Response Data: ${e.response?.data}');
+             }
           }
           
-          // TODO: Handle 401 Unauthorized (Refresh Token Logic)
+          // Auth interceptor handles 401 now
 
           return handler.next(e);
         },

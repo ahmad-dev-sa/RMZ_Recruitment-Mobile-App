@@ -1,4 +1,5 @@
 import '../../domain/entities/category_entity.dart';
+import '../../../../core/enums/workflow_type.dart';
 
 class CategoryModel extends CategoryEntity {
   const CategoryModel({
@@ -23,7 +24,7 @@ class CategoryModel extends CategoryEntity {
       descriptionAr: json['description_ar'] as String? ?? '',
       descriptionEn: json['description_en'] as String? ?? '',
       iconUrl: json['icon_url'] as String?,
-      workflowType: json['workflow_type'] as String? ?? 'recruitment',
+      workflowType: WorkflowType.fromString(json['workflow_type'] as String?),
       isNew: json['is_new'] as bool? ?? false,
       textIsNewAr: json['text_is_new_ar'] as String? ?? 'جديد',
       textIsNewEn: json['text_is_new_en'] as String? ?? 'New',

@@ -21,12 +21,14 @@ final marketingRepositoryProvider = Provider<MarketingRepository>((ref) {
 // FutureProvider for Home Banners specifically
 final homeBannersProvider = FutureProvider.autoDispose<List<BannerEntity>>((ref) async {
   final repository = ref.watch(marketingRepositoryProvider);
-  // Filtering by 'home' to match Django backend location choices
-  return repository.getBanners(location: 'home');
+  // Fetch all and filter locally for 'all' or 'mobile'
+  final banners = await repository.getBanners();
+  return banners.where((b) => b.location == 'all' || b.location == 'mobile').toList();
 });
 
 // FutureProvider for All Banners (Offers)
 final allBannersProvider = FutureProvider.autoDispose<List<BannerEntity>>((ref) async {
   final repository = ref.watch(marketingRepositoryProvider);
-  return repository.getBanners();
+  final banners = await repository.getBanners();
+  return banners.where((b) => b.location == 'all' || b.location == 'mobile' || b.location == 'offers').toList();
 });

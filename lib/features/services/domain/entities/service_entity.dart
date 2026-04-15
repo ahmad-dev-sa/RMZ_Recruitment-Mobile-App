@@ -1,3 +1,4 @@
+import '../../../../core/enums/workflow_type.dart';
 import 'category_entity.dart';
 
 class ServiceEntity {
@@ -10,6 +11,7 @@ class ServiceEntity {
   final String price;
   final bool isActive;
   final CategoryEntity? category;
+  final WorkflowType? workflowType;
 
   const ServiceEntity({
     required this.id,
@@ -21,5 +23,6 @@ class ServiceEntity {
     required this.price,
     required this.isActive,
     this.category,
+    this.workflowType,
   });
 }

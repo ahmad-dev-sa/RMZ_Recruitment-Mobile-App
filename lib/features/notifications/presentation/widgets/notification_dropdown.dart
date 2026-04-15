@@ -77,6 +77,12 @@ class _NotificationDropdownWidgetState extends ConsumerState<NotificationDropdow
   @override
   Widget build(BuildContext context) {
     final notificationState = ref.watch(notificationProvider);
+    final allNotifications = [
+      ...notificationState.unread,
+      ...notificationState.today,
+      ...notificationState.thisWeek,
+      ...notificationState.older,
+    ];
 
     return Stack(
       children: [
@@ -160,7 +166,7 @@ class _NotificationDropdownWidgetState extends ConsumerState<NotificationDropdow
                               padding: EdgeInsets.all(24.h),
                               child: const CircularProgressIndicator(color: AppColors.primary),
                             )
-                          : notificationState.notifications.isEmpty
+                          : allNotifications.isEmpty
                               ? Padding(
                                   padding: EdgeInsets.all(32.h),
                                   child: Column(
@@ -177,20 +183,20 @@ class _NotificationDropdownWidgetState extends ConsumerState<NotificationDropdow
                               : ListView.builder(
                                   shrinkWrap: true,
                                   padding: EdgeInsets.zero,
-                                  itemCount: notificationState.notifications.length,
+                                  itemCount: allNotifications.length,
                                   itemBuilder: (context, index) {
-                                    final notification = notificationState.notifications[index];
+                                    final notification = allNotifications[index];
                                     
                                     return InkWell(
                                       onTap: () {
-                                        if (!notification.isRead) {
+                                        if (!notification.isRead || notification.isNew) {
                                           ref.read(notificationProvider.notifier).markAsRead(notification.id);
                                         }
                                         // Optional: Handle navigation based on notification.notificationType
                                         // _closeDropdown();
                                       },
                                       child: Container(
-                                        color: notification.isRead ? Colors.transparent : Colors.blue.withOpacity(0.05),
+                                        color: notification.isNew ? Colors.blue.withOpacity(0.05) : Colors.transparent,
                                         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                                         child: Row(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +229,7 @@ class _NotificationDropdownWidgetState extends ConsumerState<NotificationDropdow
                                                           notification.title,
                                                           style: TextStyle(
                                                             fontSize: 14.sp,
-                                                            fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+                                                            fontWeight: notification.isNew ? FontWeight.bold : FontWeight.normal,
                                                             color: AppColors.textPrimaryLight,
                                                           ),
                                                           maxLines: 1,

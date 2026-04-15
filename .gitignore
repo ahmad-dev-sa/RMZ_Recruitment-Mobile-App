@@ -11,7 +11,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
-
+node_modules/
 # IntelliJ related
 *.iml
 *.ipr
@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+remove_fields.py
+test_orders.py
+test_orders2.py
+test_orders3.py
+update_serializers.py
+update_ui.py
+update_views.py

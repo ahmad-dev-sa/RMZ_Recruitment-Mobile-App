@@ -11,19 +11,25 @@ class HomeTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const HomeHeader(),
-            SizedBox(height: 24.h),
-            const CategorySelector(),
-            SizedBox(height: 32.h),
-            const LatestPackagesSlider(),
-            SizedBox(height: 32.h),
-            const ServicesGrid(),
-            SizedBox(height: 100.h), // Bottom padding for navbar
-          ],
-        ),
+      body: Column(
+        children: [
+          const HomeHeader(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 24.h),
+                  const CategorySelector(),
+                  SizedBox(height: 32.h),
+                  const LatestPackagesSlider(),
+                  SizedBox(height: 32.h),
+                  const ServicesGrid(),
+                  SizedBox(height: 100.h), // Bottom padding for navbar
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

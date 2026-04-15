@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/constants/app_colors.dart';
 import 'home_tab_view.dart';
 import '../../../offers/presentation/screens/offers_view.dart';
+import '../../../../features/settings/presentation/screens/settings_view.dart';
+import '../../../orders/presentation/screens/my_orders_view.dart';
+import '../../../../features/profile/presentation/screens/profile_view.dart';
 
 class MainHomeView extends StatefulWidget {
   const MainHomeView({super.key});
@@ -14,13 +17,14 @@ class MainHomeView extends StatefulWidget {
 
 class _MainHomeViewState extends State<MainHomeView> {
   int _currentIndex = 0;
+  int _previousIndex = 0;
 
   final List<Widget> _pages = [
     const HomeTabView(),
-    const Center(child: Text('Orders Page Placeholder')),
+    const MyOrdersView(),
     const OffersView(),
-    const Center(child: Text('Profile Page Placeholder')),
-    const Center(child: Text('Settings Page Placeholder')),
+    const ProfileView(),
+    const SettingsView(),
   ];
 
   @override
@@ -38,9 +42,38 @@ class _MainHomeViewState extends State<MainHomeView> {
 
     return Scaffold(
       backgroundColor: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
+      body: Stack(
+        clipBehavior: Clip.hardEdge,
+        children: List.generate(_pages.length, (index) {
+          final isActive = _currentIndex == index;
+          final isPrevious = _previousIndex == index;
+          final isParticipating = isActive || isPrevious;
+
+          double dx = 0;
+          if (index < _currentIndex) {
+            dx = -1.0;
+          } else if (index > _currentIndex) {
+            dx = 1.0;
+          } else {
+            dx = 0.0;
+          }
+
+          final isRtl = context.locale.languageCode == 'ar';
+          if (isRtl) dx = -dx;
+
+          return IgnorePointer(
+            ignoring: !isActive,
+            child: AnimatedSlide(
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeOutCubic,
+              offset: Offset(dx, 0),
+              child: Opacity(
+                opacity: isParticipating ? 1.0 : 0.0,
+                child: _pages[index],
+              ),
+            ),
+          );
+        }),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -64,9 +97,12 @@ class _MainHomeViewState extends State<MainHomeView> {
 
                 return GestureDetector(
                   onTap: () {
-                    setState(() {
-                      _currentIndex = index;
-                    });
+                    if (_currentIndex != index) {
+                      setState(() {
+                        _previousIndex = _currentIndex;
+                        _currentIndex = index;
+                      });
+                    }
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
@@ -87,17 +123,27 @@ class _MainHomeViewState extends State<MainHomeView> {
                           color: isSelected ? Colors.white : AppColors.primary.withOpacity(0.8),
                           size: 24.sp,
                         ),
-                        if (isSelected) ...[
-                          SizedBox(width: 8.w),
-                          Text(
-                            item['label'] as String,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.sp,
-                            ),
-                          ),
-                        ],
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOutQuint,
+                          alignment: Alignment.center,
+                          child: isSelected
+                              ? Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(width: 8.w),
+                                    Text(
+                                      item['label'] as String,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.sp,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                        ),
                       ],
                     ),
                   ),

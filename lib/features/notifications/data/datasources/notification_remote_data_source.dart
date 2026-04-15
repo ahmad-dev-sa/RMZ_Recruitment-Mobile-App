@@ -2,11 +2,13 @@ import 'package:dio/dio.dart';
 import '../../../../core/network/api_constants.dart';
 import '../../../../core/network/dio_client.dart';
 import '../models/notification_model.dart';
+import '../models/notifications_response_model.dart';
 
 abstract class NotificationRemoteDataSource {
-  Future<List<NotificationModel>> getNotifications({bool? isRead});
+  Future<NotificationsResponseModel> getNotifications();
   Future<NotificationModel> markAsRead(String id);
   Future<bool> markAllAsRead();
+  Future<bool> deleteNotification(String id);
 }
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
@@ -15,32 +17,11 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   NotificationRemoteDataSourceImpl(this._dioClient);
 
   @override
-  Future<List<NotificationModel>> getNotifications({bool? isRead}) async {
+  Future<NotificationsResponseModel> getNotifications() async {
     try {
-      final queryParams = <String, dynamic>{};
-      if (isRead != null) {
-        queryParams['is_read'] = isRead;
-      }
-
-      final response = await _dioClient.dio.get(
-        ApiConstants.notifications,
-        queryParameters: queryParams,
-      );
-
-      // Backend wraps data in ApiResponse.success(data=response.data)
-      // which results in {"success": true, "data": {"count": X, "results": [...]}} 
-      // or {"success": true, "data": [...]} if no pagination is active.
-      
-      List<dynamic> rawList = [];
-      if (response.data['data'] != null) {
-        if (response.data['data'] is Map && response.data['data'].containsKey('results')) {
-          rawList = response.data['data']['results'];
-        } else if (response.data['data'] is List) {
-           rawList = response.data['data'];
-        }
-      }
-
-      return rawList.map((json) => NotificationModel.fromJson(json)).toList();
+      final response = await _dioClient.dio.get(ApiConstants.notifications);
+      final data = response.data['data'] ?? {};
+      return NotificationsResponseModel.fromJson(data);
     } on DioException catch (e) {
       throw _handleError(e);
     }
@@ -50,10 +31,9 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   Future<NotificationModel> markAsRead(String id) async {
     try {
       final response = await _dioClient.dio.post(
-        '${ApiConstants.notifications}$id/mark-read/',
+        '${ApiConstants.notifications}$id/read/',
       );
       
-      // Backend returns ApiResponse.success(data=serializer.data)
       final data = response.data['data'] ?? {};
       return NotificationModel.fromJson(data);
     } on DioException catch (e) {
@@ -65,9 +45,21 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
   Future<bool> markAllAsRead() async {
      try {
       final response = await _dioClient.dio.post(
-        '${ApiConstants.notifications}mark-all-read/',
+        '${ApiConstants.notifications}read-all/',
       );
       
+      return response.data['success'] == true;
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  @override
+  Future<bool> deleteNotification(String id) async {
+    try {
+      final response = await _dioClient.dio.delete(
+        '${ApiConstants.notifications}$id/',
+      );
       return response.data['success'] == true;
     } on DioException catch (e) {
       throw _handleError(e);

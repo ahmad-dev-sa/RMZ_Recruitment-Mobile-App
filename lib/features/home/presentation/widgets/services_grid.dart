@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/routing/workflow_router.dart';
 import '../../../services/presentation/providers/service_provider.dart';
 
 class ServicesGrid extends ConsumerWidget {
@@ -32,7 +33,7 @@ class ServicesGrid extends ConsumerWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimaryLight,
+                  color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textPrimaryLight,
                 ),
               ),
               SizedBox(height: 4.h),
@@ -54,7 +55,7 @@ class ServicesGrid extends ConsumerWidget {
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                 child: Center(
                   child: Text(
-                    "لا توجد خدمات متاحة حالياً في هذا القسم",
+                    'home.no_services'.tr(),
                     style: TextStyle(fontSize: 14.sp, color: AppColors.textSecondaryLight),
                   ),
                 ),
@@ -78,11 +79,11 @@ class ServicesGrid extends ConsumerWidget {
 
                 return GestureDetector(
                   onTap: () {
-                    context.pushNamed('booking', queryParameters: {'serviceName': name});
+                    WorkflowRouter.startWorkflow(context, service: service);
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).brightness == Brightness.dark ? const Color(0xFF1E293B) : Colors.white,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
@@ -100,7 +101,7 @@ class ServicesGrid extends ConsumerWidget {
                           width: 64.w,
                           height: 64.w,
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.white.withAlpha(20) : Colors.grey.shade200,
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -127,7 +128,7 @@ class ServicesGrid extends ConsumerWidget {
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimaryLight,
+                              color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textPrimaryLight,
                             ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -141,7 +142,7 @@ class ServicesGrid extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
-          error: (error, stackTrace) => Center(child: Text('حدث خطأ في جلب الخدمات: $error')),
+          error: (error, stackTrace) => Center(child: Text('home.error_fetching_services'.tr())),
         ),
       ],
     );

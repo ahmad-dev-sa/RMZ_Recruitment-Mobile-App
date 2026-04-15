@@ -38,11 +38,15 @@ class _OnboardingViewState extends State<OnboardingView> {
   ];
 
   Future<void> _completeOnboarding() async {
+    await _navigateToAuth('login');
+  }
+
+  Future<void> _navigateToAuth(String routeName) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('has_seen_onboarding', true);
     
     if (mounted) {
-      context.goNamed('login');
+      context.goNamed(routeName);
     }
   }
 
@@ -156,9 +160,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () {
-                              context.goNamed('login');
-                            },
+                            onPressed: () => _navigateToAuth('login'),
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: AppColors.secondary),
                               padding: EdgeInsets.symmetric(vertical: 14.h),
@@ -180,10 +182,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                         Expanded(
                           child: PrimaryButton(
                             text: 'register'.tr(),
-                            onPressed: () {
-                              // TODO: Go to Register
-                              context.goNamed('login'); // Fallback to login for now
-                            },
+                            onPressed: () => _navigateToAuth('register'),
                           ),
                         ),
                       ],
